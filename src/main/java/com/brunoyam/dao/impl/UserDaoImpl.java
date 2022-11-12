@@ -62,4 +62,39 @@ public class UserDaoImpl implements UserDao {
             System.out.println("Ошибка при подключении к БД");
         }
     }
+
+    @Override
+    public User getUser(Long id) {
+        User user = new User();
+        try (Connection connection = DriverManager.getConnection(URL,USER,PASSWORD)) {
+            Statement statement = connection.createStatement();
+            String sqlInsert = "SELECT * FROM users WHERE ID = " + id;
+            ResultSet resultSet = statement.executeQuery(sqlInsert);
+            while (resultSet.next()){
+                String name = resultSet.getString(NAME_COLUMN);
+                Integer age = resultSet.getInt(AGE_COLUMN);
+
+                user.setId(id);
+                user.setName(name);
+                user.setAge(age);
+            }
+            return user;
+        } catch (SQLException e) {
+            System.out.println("Ошибка при подключении к БД");
+        }
+        return user;
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        try (Connection connection = DriverManager.getConnection(URL,USER,PASSWORD)) {
+            String sqlInsert = "DELETE FROM users WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlInsert);
+            preparedStatement.setLong(1,id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Ошибка при подключении к БД");
+        }
+    }
+
 }

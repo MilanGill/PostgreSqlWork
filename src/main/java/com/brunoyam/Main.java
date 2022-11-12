@@ -18,5 +18,9 @@ public class Main {
         user.setAge(20);
 
         userService.addUser(user);
+        userService.deleteUser(1L);
+
+        User user2 = userService.getUser(3L);
+        System.out.println(user2);
     }
 }
